@@ -1,1 +1,3 @@
 # AppStudio
+
+![](doc/screenshot.jpg)
