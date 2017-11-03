@@ -1,8 +1,8 @@
 # AppStudio
 
-##pset1: Mr. Potato Head
+## pset1: Mr. Potato Head
 
-###Short Description App
+### Short Description App
 
 In the following app it is possible to toggle the bodyparts of Mr. Potato Head on and off by checking and unchecking the checkboxes.
 
