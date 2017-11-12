@@ -9,11 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 
 
 public class FillInScreen extends AppCompatActivity {
@@ -50,7 +47,7 @@ public class FillInScreen extends AppCompatActivity {
     }
 
     public void clearFillIn(){
-        editText.setText(" ");
+        editText.setText("");
     }
 
     public void goToCompletedText(){
@@ -64,9 +61,14 @@ public class FillInScreen extends AppCompatActivity {
         assetManager = getAssets();
         inputStream = assetManager.open(intent.getStringExtra("textFile"));
         story = new Story(inputStream);
-        System.out.println(story.toString());
         changeFillIn();
         clearFillIn();
+    }
+
+    public void latestPlaceholder(){
+        if (story.getPlaceholderRemainingCount() == 1) {
+            button.setText("Finish");
+        }
     }
 
     public void nextPlaceholder(View view) {
@@ -74,30 +76,22 @@ public class FillInScreen extends AppCompatActivity {
         if (story.getPlaceholderRemainingCount() == 0) {
             goToCompletedText();
         }
-        else if (story.getPlaceholderRemainingCount() == 1) {
-            button.setText("Complete");
-        }
+        latestPlaceholder();
         changeFillIn();
         clearFillIn();
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("text", story.toString());
+        outState.putSerializable("story", story);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        String text = savedInstanceState.getString("text");
-        try {
-            inputStream = new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8.name()));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        story = new Story((InputStream) inputStream);
-        System.out.println(story.toString());
+        story = (Story) savedInstanceState.getSerializable("story");
         changeFillIn();
+        latestPlaceholder();
     }
 
     @Override
